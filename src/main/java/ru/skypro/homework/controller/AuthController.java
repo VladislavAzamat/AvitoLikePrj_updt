@@ -13,6 +13,7 @@ import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.service.AuthService;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 
 @Slf4j
@@ -24,7 +25,7 @@ public class AuthController {
     private final AuthService authService;
     @Transactional
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Login login) {
+    public ResponseEntity<?> login(@Valid @RequestBody Login login) {
         if (authService.login(login.getUsername(), login.getPassword())) {
             return ResponseEntity.ok().build();
         } else {
@@ -33,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Register register) {
+    public ResponseEntity<?> register(@Valid @RequestBody Register register) {
         if (authService.register(register)) {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {

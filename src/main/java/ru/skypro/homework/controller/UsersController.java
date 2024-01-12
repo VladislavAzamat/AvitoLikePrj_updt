@@ -18,6 +18,8 @@ import ru.skypro.homework.repository.UserEntityRepository;
 import ru.skypro.homework.service.UsersService;
 import ru.skypro.homework.service.impl.UsersServiceImpl;
 
+import javax.validation.Valid;
+
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -27,7 +29,7 @@ public class UsersController {
     private final UsersServiceImpl usersService;
 
     @PostMapping("/set_password")
-    public ResponseEntity<Void> setPassword(@RequestBody NewPassword newPassword, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<Void> setPassword(@Valid @RequestBody NewPassword newPassword, @AuthenticationPrincipal CustomUserDetails userDetails) {
         String username = userDetails.getUsername();
         usersService.setPassword(newPassword, userDetails);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -38,7 +40,7 @@ public class UsersController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<UpdateUser> updateUser(@RequestBody UpdateUser updateUser, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<UpdateUser> updateUser(@Valid @RequestBody UpdateUser updateUser, @AuthenticationPrincipal CustomUserDetails userDetails) {
         return new ResponseEntity<>(usersService.updateUser(updateUser, userDetails), HttpStatus.OK);
     }
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

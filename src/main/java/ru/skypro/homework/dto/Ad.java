@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Ad {
+
     private Integer author;
     private String image;
     private Integer pk;

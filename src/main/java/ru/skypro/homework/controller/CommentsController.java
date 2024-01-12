@@ -11,6 +11,8 @@ import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.dto.CustomUserDetails;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
+import javax.validation.Valid;
+
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -29,7 +31,7 @@ public class CommentsController {
     }
     @PostMapping("/{adId}/comments")
     public ResponseEntity<Comment> addComment(@PathVariable Integer adId,
-                                              @RequestBody CreateOrUpdateComment createOrUpdateComment,
+                                              @Valid @RequestBody CreateOrUpdateComment createOrUpdateComment,
                                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         Comment commentOptional = commentServiceImpl.addComment(adId, createOrUpdateComment, userDetails);
         return new ResponseEntity<>(commentOptional,HttpStatus.OK);
@@ -44,7 +46,7 @@ public class CommentsController {
     @PatchMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<Comment> updateComment(@PathVariable Integer adId,
                                                  @PathVariable Integer commentId,
-                                                 @RequestBody CreateOrUpdateComment createOrUpdateComment,
+                                                 @Valid @RequestBody CreateOrUpdateComment createOrUpdateComment,
                                                  @AuthenticationPrincipal CustomUserDetails userDetails) {
         return new ResponseEntity<>(commentServiceImpl.updateComment(adId,commentId,createOrUpdateComment,userDetails),HttpStatus.OK);
     }

@@ -7,6 +7,6 @@ CREATE TABLE ad_entity
     price               integer,
     title               text,
     description         text,
-    user_entity_id bigint REFERENCES user_entity (id),
-    image_entity_path text REFERENCES image_entity (file_path),
+    user_entity_id bigint REFERENCES user_entity,
+    image_entity_path text REFERENCES image_entity,
 );

@@ -11,5 +11,5 @@ CREATE TABLE user_entity
     phone               smallint,
     role                varchar(5),
     description         text,
-    image_entity_path text REFERENCES image_entity (file_path),
+    image_entity_path text REFERENCES image_entity,
 );

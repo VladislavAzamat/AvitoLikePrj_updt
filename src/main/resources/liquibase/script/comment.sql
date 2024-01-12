@@ -6,6 +6,6 @@ CREATE TABLE comment_entity
     price                    integer,
     created_at               interval,
     text                     text,
-    user_entity_id bigint REFERENCES user_entity (id),
-    ad_id bigint REFERENCES ad_entity (id),
+    user_entity_id bigint REFERENCES user_entity,
+    ad_id bigint REFERENCES ad_entity,
 );

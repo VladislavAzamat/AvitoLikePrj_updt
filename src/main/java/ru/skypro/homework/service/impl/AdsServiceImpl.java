@@ -28,6 +28,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -126,10 +127,7 @@ public class AdsServiceImpl implements AdsService {
                 .orElseThrow(() ->new EntityNotFoundException("The entity with the specified id = " + adId + " was not found"));
         authenticationCheck.accessCheck(userDetails, adEntity.getUserEntity());
 
-        ImageEntity imageToRemove = adEntity.getImageEntity();
-
         adEntityRepository.delete(adEntity);
-        imageEntityRepository.delete(imageToRemove);
 
         logger.info("The removeAd method removed the ad with the id = " + adId);
     }
@@ -175,6 +173,8 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public Ads getAdsMe(CustomUserDetails userDetails) {
+
+//        Pattern pattern = Pattern.compile("\\+7[0-9]{3,6}");
 
         List<Ad> adList = adMapper.adEntityListToAdList(adEntityRepository.findByUserEntity_id(userDetails.getId()));
         return Ads.builder()

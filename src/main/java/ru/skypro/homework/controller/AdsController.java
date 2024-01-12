@@ -10,6 +10,8 @@ import ru.skypro.homework.dto.CustomUserDetails;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.service.impl.AdsServiceImpl;
 
+import javax.validation.Valid;
+
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -26,9 +28,10 @@ public class AdsController {
     public ResponseEntity<Ads> getAllAds() {
         return new ResponseEntity<>(adsService.getAllAds(), HttpStatus.OK);
     }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Ad> addAd(@RequestPart("image") MultipartFile image,
-                                    @RequestPart("properties") CreateOrUpdateAd properties
+                                    @Valid @RequestPart("properties") CreateOrUpdateAd properties
             ,@AuthenticationPrincipal CustomUserDetails userDetails) {
         return new ResponseEntity<>(adsService.addAd(image, properties, userDetails),HttpStatus.CREATED);
 
@@ -45,7 +48,7 @@ public class AdsController {
     }
     @PatchMapping(value = "/{id}")
     public ResponseEntity<CreateOrUpdateAd> updateAds(@PathVariable Integer id,
-                                                      @RequestBody CreateOrUpdateAd updateAd,
+                                                      @Valid @RequestBody CreateOrUpdateAd updateAd,
                                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
         return new ResponseEntity<>(adsService.updateAd(id,updateAd,userDetails), HttpStatus.OK);
     }
