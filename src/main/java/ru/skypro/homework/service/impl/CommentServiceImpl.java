@@ -9,7 +9,6 @@ import ru.skypro.homework.dto.CustomUserDetails;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.entity.UserEntity;
-import ru.skypro.homework.exceptions.BlankFieldException;
 import ru.skypro.homework.exceptions.MissingAdException;
 import ru.skypro.homework.mapper.CommentMapper;
 import ru.skypro.homework.repository.AdEntityRepository;
@@ -23,7 +22,6 @@ import java.util.List;
 
 @Service
 public class CommentServiceImpl implements CommentService {
-    private final Logger logger = LoggerFactory.getLogger(CommentServiceImpl.class);
     private final AdEntityRepository adEntityRepository;
     private final CommentEntityRepository commentEntityRepository;
     private final CommentMapper commentMapper;
@@ -50,8 +48,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comments getComments(Integer adId) {
 
-        List<Comment> comments = commentMapper
-                .commentEntityListToCommentList(commentEntityRepository.findByAdEntity_id(adId));
+        List<Comment> comments = commentMapper.commentEntityListToCommentList(commentEntityRepository.findByAdEntity_id(adId));
         return Comments.builder()
                 .results(comments)
                 .count(comments.size())
@@ -77,9 +74,6 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public Comment addComment(Integer adId, CreateOrUpdateComment createOrUpdateComment, CustomUserDetails userDetails) {
-        if (createOrUpdateComment.getText() == null) {
-            throw new BlankFieldException("Пустое поле обновленного комментария");
-        }
 
         AdEntity adEntity = adEntityRepository.findById(adId).orElseThrow(() ->
                 new MissingAdException("The ad with the specified id is missing "));

@@ -14,11 +14,9 @@ import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.ImageEntity;
 import ru.skypro.homework.entity.UserEntity;
-import ru.skypro.homework.exceptions.BlankFieldException;
 import ru.skypro.homework.exceptions.MissingAdException;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.repository.AdEntityRepository;
-import ru.skypro.homework.repository.CommentEntityRepository;
 import ru.skypro.homework.repository.ImageEntityRepository;
 import ru.skypro.homework.repository.UserEntityRepository;
 import ru.skypro.homework.service.AdsService;
@@ -28,7 +26,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,19 +77,12 @@ public class AdsServiceImpl implements AdsService {
         UserEntity userEntity = userEntityRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(()-> new UsernameNotFoundException("Username not found in database"));
 
-        if (properties.getTitle().isEmpty() || properties.getPrice().toString().isEmpty()
-                || properties.getDescription().isEmpty()) {
-            throw new BlankFieldException("Empty fields saving an object CreateOrUpdateAd");
-        }
-
         AdEntity adEntity = adMapper.AdToAdEntity(properties);
         adEntityRepository.save(adEntity);
-
         ImageEntity adImage = imageService.uploadImageToServer(image, adEntity.getId(), adEntity.getTitle());
         adEntity.setImageEntity(Optional.ofNullable(adImage).orElse(new ImageEntity()));
         adEntity.setUserEntity(userEntity);
         adEntityRepository.save(adEntity);
-
 
         logger.info("A user's ad with a username (email) " + userDetails.getUsername() + " has been added");
         return adMapper.AdEntityToAd(adEntity);
@@ -128,7 +118,6 @@ public class AdsServiceImpl implements AdsService {
         authenticationCheck.accessCheck(userDetails, adEntity.getUserEntity());
 
         adEntityRepository.delete(adEntity);
-
         logger.info("The removeAd method removed the ad with the id = " + adId);
     }
     /**
@@ -151,14 +140,6 @@ public class AdsServiceImpl implements AdsService {
                 .orElseThrow(() -> new IllegalArgumentException("The ad with id = " + adId + " was not found"));
 
         authenticationCheck.accessCheck(userDetails, adEntity.getUserEntity());
-
-        if (!properties.getTitle().isEmpty()) {
-            adEntity.setTitle(properties.getTitle());}
-        if (!properties.getPrice().toString().isEmpty()) {
-            adEntity.setPrice(properties.getPrice());}
-        if (!properties.getDescription().isEmpty()) {
-            adEntity.setDescription(properties.getDescription());}
-
         adEntityRepository.save(adEntity);
 
         logger.info("The editFaculty method has updated the ad data");
@@ -199,7 +180,6 @@ public class AdsServiceImpl implements AdsService {
 
         AdEntity adEntity = adEntityRepository.findById(adId)
                 .orElseThrow(() -> new IllegalArgumentException("Обьявление с указанным " + adId + " отсуствует!"));
-
         authenticationCheck.accessCheck(userDetails, adEntity.getUserEntity());
 
         ImageEntity obsoleteImage = adEntity.getImageEntity();
@@ -208,7 +188,6 @@ public class AdsServiceImpl implements AdsService {
         adEntity.setImageEntity(newImage);
         adEntityRepository.save(adEntity);
         imageEntityRepository.delete(obsoleteImage);
-
 
         logger.info("The updateImage method updated the ad image" );
     }

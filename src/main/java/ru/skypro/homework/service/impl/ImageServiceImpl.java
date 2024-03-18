@@ -78,13 +78,13 @@ public class ImageServiceImpl implements ImageService {
                 && !adImage.getContentType().equals("image/gif")) {
             throw new MissingImageException("Incorrect format of the new image!");
         }
-        logger.info(adImage.getName());
 
         Path adImagePath = Path.of(imagePath + firstPartOfImageName + "_" + secondPartOfImageName + "." + adImage.getContentType().split("/")[1]);
         try (InputStream adImageInputStream = adImage.getInputStream()) {
             Files.copy(adImageInputStream, adImagePath, StandardCopyOption.REPLACE_EXISTING);
+            logger.info(adImage.getName() + "has been uploaded to server!");
         }  catch (IOException e) {
-            throw new MissingImageException("The image has not been uploaded to server");
+            throw new MissingImageException("The image has not been uploaded to server!");
         }
 
         return ImageEntity.builder()

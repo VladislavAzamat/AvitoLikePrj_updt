@@ -43,8 +43,8 @@ public class UsersServiceImpl implements UsersService {
         UserEntity userEntity = userEntityRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("The USER/ADMIN to change password is not found"));
         authenticationCheck.accessCheck(userDetails, userEntity);
-        userEntity.setPassword(encoder.encode(newPassword.getNewPassword()));
 
+        userEntity.setPassword(encoder.encode(newPassword.getNewPassword()));
         userEntityRepository.save(userEntity);
     }
 
@@ -61,6 +61,7 @@ public class UsersServiceImpl implements UsersService {
         UserEntity userEntity = userEntityRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
         authenticationCheck.accessCheck(userDetails, userEntity);
+
         return userMapper.userEntityToUser(userEntity);
     }
 
@@ -79,16 +80,6 @@ public class UsersServiceImpl implements UsersService {
 
         UserEntity userEntity = userEntityRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
-
-        if (!updateUser.getFirstName().isEmpty()) {
-            userEntity.setFirstName(updateUser.getFirstName());
-        }
-        if (!updateUser.getLastName().isEmpty()) {
-            userEntity.setLastName(updateUser.getLastName());
-        }
-        if (!updateUser.getPhone().isEmpty()) {
-            userEntity.setPhone(updateUser.getPhone());
-        }
 
         userEntityRepository.save(userEntity);
         return updateUser;
